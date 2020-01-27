@@ -123,12 +123,6 @@ classdef modulator
                 % demodulation scheme
                 error("Modulatation scheme %s is not supported",obj.modulation_scheme);
             end
-
-        
-        
-        
-        
-        
         end
     end
 end

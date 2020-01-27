@@ -18,9 +18,9 @@ carrier_count = 64; % The number of subcarriers used, usually referred to as N
 
 cyclic_prefix = 4; % The length of cyclic prefix, in terms of sample. 
 
-channel_response = [1];
+channel_response = [1,0.1,0.2,0.4,0.5,0.6];
 
-SNR = 0; % in dB
+SNR = 100; % in dB
 
 %************Control Section Ends******************%
 
@@ -64,8 +64,6 @@ output_vector= output_vector(1:byte_count);
 
 %********Compute Region Ends************************%
 
-% BER
-BER = sum(input_vector~=output_vector)/numel(input_vector);
 
 % Constallation 
 
@@ -75,9 +73,14 @@ hold on;
 % For reference input, we plot 2 times the amount of signal modulation
 % order to hopefully exhaust all the possible constallation.
 
-scatter(real(complex_symbols(1:modulator_class.modulation_order*5)),imag(complex_symbols(1:modulator_class.modulation_order*5)),'x');
+%Pick the symbols to plot on constellation. This amount is chosen as the
+%minumum of 200,5 times modulation order and the total trasmitted symbols.
 
-scatter(real(demodulated_ofdm_symbols(1:modulator_class.modulation_order*5)),imag(demodulated_ofdm_symbols(1:modulator_class.modulation_order*5)),'filled');
+plotting_range = randi(numel(complex_symbols),[1,min([numel(complex_symbols),modulator_class.modulation_order*5,2e2])]);
+
+scatter(real(complex_symbols(plotting_range)),imag(complex_symbols(plotting_range)),100,'x');
+
+scatter(real(demodulated_ofdm_symbols(plotting_range)),imag(demodulated_ofdm_symbols(plotting_range)),20,'filled');
 
 title("Constallation");
 
@@ -87,4 +90,4 @@ ax.XAxisLocation='origin';
 
 ax.YAxisLocation='origin';
 
-
+axis([-6,6,-6,6]);
